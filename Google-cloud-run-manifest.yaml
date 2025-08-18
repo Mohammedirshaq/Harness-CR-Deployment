@@ -4,11 +4,11 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: <serviceName>
+  name: irshaq-flask-app
 spec:
   template:
     spec:
       containers:
-        - image: <imagePath>
+        - image: mdirshaq/flask-web-app:v1
           ports:
-            - containerPort: <port>
+            - containerPort: 5000
