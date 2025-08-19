@@ -27,7 +27,7 @@ spec:
       annotations:
         # Networking
         run.googleapis.com/ingress: "all"  # Allow public access
-        
+        run.googleapis.com/allow-unauthenticated: "true"
         # Scaling
         autoscaling.knative.dev/minScale: "1"  # Prevent zero scaling
         autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances
