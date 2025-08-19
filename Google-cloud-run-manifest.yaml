@@ -1,16 +1,67 @@
 # Following are the minimum set of parameters required to create a Google Cloud Run Service.
 # Please make sure your uploaded manifest file includes all of them.
+#apiVersion: serving.knative.dev/v1
+#kind: Service
+#metadata:
+#  name: irshaq-flask-app
+#spec:
+#  template:
+#    metadata:
+#      annotations:
+#        run.googleapis.com/ingress: "all"  # Ensure public access
+#    spec:
+#      containers:
+#        - image: mdirshaq/flask-web-app:v1
+#          ports:
+#            - containerPort: 5000
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: irshaq-flask-app
+  labels:
+    app: flask-web-app
+    env: production
 spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/ingress: "all"  # Ensure public access
+        # Networking
+        run.googleapis.com/ingress: "all"  # Allow public access
+        run.googleapis.com/startup-cpu-boost: "true"  # Faster cold starts
+        
+        # Scaling
+        autoscaling.knative.dev/minScale: "1"  # Prevent zero scaling
+        autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances
+        
+        # Debugging
+        run.googleapis.com/cloudsql-instances: ""  # Add if using Cloud SQL
     spec:
       containers:
-        - image: mdirshaq/flask-web-app:v1
-          ports:
-            - containerPort: 5000
+      - image: mdirshaq/flask-web-app:v1
+        ports:
+        - containerPort: 5000
+        name: http1
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        - name: PORT
+          value: "5000"
+        resources:
+          limits:
+            cpu: "1000m"  # 1 vCPU
+            memory: "512Mi"  # 512MB RAM
+        startupProbe:
+          httpGet:
+            path: /healthz  # Add a health check endpoint
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+  traffic:
+  - latestRevision: true
+    percent: 100
