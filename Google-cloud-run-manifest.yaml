@@ -1,26 +1,9 @@
 # Following are the minimum set of parameters required to create a Google Cloud Run Service.
 # Please make sure your uploaded manifest file includes all of them.
-#apiVersion: serving.knative.dev/v1
-#kind: Service
-#metadata:
-#  name: irshaq-flask-app
-#spec:
-#  template:
-#    metadata:
-#      annotations:
-#        run.googleapis.com/ingress: "all"  # Ensure public access
-#    spec:
-#      containers:
-#        - image: mdirshaq/flask-web-app:v1
-#          ports:
-#            - containerPort: 5000
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: irshaq-flask-app
-  labels:
-    app: flask-web-app
-    env: production
 spec:
   template:
     metadata:
@@ -30,12 +13,9 @@ spec:
         run.googleapis.com/allow-unauthenticated: "true"
         # Scaling
         autoscaling.knative.dev/minScale: "1"  # Prevent zero scaling
-        autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances
-        
-        # Debugging
+        autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances # Ensure public access
     spec:
       containers:
-      - image: mdirshaq/flask-web-app:v1
-        ports:
-        - containerPort: 5000
-       
+        - image: mdirshaq/flask-web-app:v1
+          ports:
+            - containerPort: 5000
