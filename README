@@ -1,0 +1,91 @@
+:)
+create a cluster 
+create a delegate for a cluster of type kube manifest and verify its connectivity
+create a cluster connector and verify its connectivity
+
+
+enable the necessary APIs in your target project:
+Cloud Resource Manager API
+Cloud Run API
+Container Registry API (if pushing images)
+
+Grant it the necessary roles:
+roles/run.admin (Cloud Run Admin)
+roles/iam.serviceAccountUser
+roles/resourcemanager.projectIamAdmi
+
+create a pipeline in harness with deploy stage and select google cloud run deployment:
+service:
+provide service name and manifest file link
+and add artifact source and primary will be <+input>
+save
+
+Environment:
+provide invironment namea nd type
+
+Infrastructure:
+provide infrastructure name , gcp connector, project id, region
+
+select execution startigy,
+
+save and run the pipeline-> provide TAG for the docker image you want to deploy and the cluster connectors
+
+
+
+Why Mention Image in Manifest If Harness Overrides It?
+Even though Harness overrides the image at runtime, declaring it in the manifest still has important uses:
+
+1. Documentation & Clarity
+The manifest acts as declarative infrastructure-as-code (IaC).
+It clearly states:
+Which image should run (e.g., v2).
+Ports, resources, env vars, etc.
+Helps teams understand the intended state of the service.
+
+############################info#################################
+
+Google Cloud Run is a fully managed, serverless platform that lets you run containerized applications and event-driven workloads without having to manage the underlying infrastructure. It's a "Platform as a Service" (PaaS) that abstracts away the complexities of servers, scaling, and orchestration, allowing you to focus on writing code. Cloud Run is built on the open-source **Knative** project, which extends Kubernetes to provide a serverless experience. 🚀
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## Benefits of Cloud Run Over GKE Cluster Deployment (Standard and Autopilot)
+
+The primary distinction between Cloud Run and Google Kubernetes Engine (GKE) is the **level of management and control**. While GKE provides a highly customizable and flexible environment, Cloud Run offers a simpler, more hands-off approach. Here's a breakdown of the benefits of Cloud Run compared to GKE's Standard and Autopilot modes.
+
+### Simplicity and Developer Productivity
+Cloud Run is designed for maximum simplicity. You just provide a container image or even your source code, and Cloud Run handles the rest.
+* **Minimal Management Overhead:** With Cloud Run, you don't need to manage Kubernetes clusters, nodes, or networking configurations. This frees up developers to focus on building applications rather than on infrastructure management.
+* **Faster Deployment:** The deployment process on Cloud Run is significantly faster and simpler. It eliminates the need for complex YAML files, Helm charts, and other Kubernetes-specific configurations.
+
+### Cost Efficiency
+Cloud Run's pricing model is built for cost-effectiveness, especially for intermittent or spiky workloads.
+* **Pay-per-use:** Cloud Run has a true "pay-per-use" model, billing you only for the time your container is actively processing a request. This is a significant advantage over GKE Standard, where you pay for the underlying virtual machines (VMs) whether they're in use or not.
+* **Scale-to-Zero:** When there is no traffic, Cloud Run can scale the number of container instances down to zero, meaning you pay nothing. GKE Standard clusters, on the other hand, always have a base cost because you pay for the nodes themselves. GKE Autopilot also bills for resource requests, so even an idle pod incurs a cost.
+
+### Auto-Scaling and Event-Driven Architecture
+Cloud Run's serverless nature is ideal for handling variable traffic and event-based workloads.
+* **Rapid, Automatic Scaling:** Cloud Run automatically scales your containers up and down in response to incoming traffic or events, from zero to thousands of instances. This is often faster and more seamless than the autoscaling mechanisms in GKE.
+* **Integrated with Google Cloud:** Cloud Run is deeply integrated with other Google Cloud services like Pub/Sub, Cloud Storage, and Cloud Tasks, making it an excellent choice for building event-driven architectures. 
+
+cloudrun vs autopilot cluster:
+Imagine you want to build and host a website. You have two main options: using Cloud Run or using a GKE Autopilot cluster.
+
+### Cloud Run: The "Easy Button" 🚀
+
+Think of Cloud Run like a **vending machine for your website**. You build your code, put it into a container (the "snack"), and give it to Cloud Run. Cloud Run handles everything else for you.
+
+* **How it Works:** When someone visits your website, Cloud Run automatically **spins up a new instance** of your container to handle the request. When traffic dies down, it **shuts down the instances**, all the way down to zero.
+* **Simple Terms:** It's a serverless platform where you only care about your code. You don't manage any servers, networking, or cluster configurations.
+* **Example:** You have a small API for a mobile app. It gets requests a few times an hour. With Cloud Run, you pay only for the seconds your API is active. When no one is using it, you pay **nothing**.
+
+---
+
+### GKE Autopilot: The "Managed Apartment Building" 🏢
+
+Think of a GKE Autopilot cluster as a **managed apartment building for your website**. Google manages the building (the cluster), but you're still responsible for your own apartment (your application).
+
+* **How it Works:** You deploy your website (a "pod") inside the cluster. You have to specify how much CPU and memory your website needs, and the cluster ensures those resources are available. The cluster manager (Autopilot) automatically adds or removes floors (nodes) in the building to accommodate all the tenants (pods).
+* **Simple Terms:** It's a simplified version of Kubernetes, the industry standard for container orchestration. It gives you more control and flexibility than Cloud Run, but you still need to understand some Kubernetes concepts.
+* **Example:** You have a large e-commerce website with steady traffic and complex backend services. You need specific configurations for networking and want to run multiple containers together for certain tasks. With Autopilot, you have the flexibility to manage these details and are billed for the resources you reserve for your application, even if they aren't fully utilized at all times.
+
+you can manage configs related the applycation deployment same way you do it in standard cluster but cannot manage the hardware part
