@@ -8,6 +8,7 @@ metadata:
     # These annotations must be at the SERVICE level (metadata.annotations)
     run.googleapis.com/ingress: "all"  # Allow public access
     run.googleapis.com/allow-unauthenticated: "true"
+    run.googleapis.com/invoker-iam-disabled: 'true'
 spec:
   template:
     metadata:
