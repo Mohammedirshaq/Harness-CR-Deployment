@@ -4,16 +4,17 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: irshaq-flask-app
+  annotations:
+    # These annotations must be at the SERVICE level (metadata.annotations)
+    run.googleapis.com/ingress: "all"  # Allow public access
+    run.googleapis.com/allow-unauthenticated: "true"
 spec:
   template:
     metadata:
       annotations:
-        # Networking
-        run.googleapis.com/ingress: "all"  # Allow public access
-        run.googleapis.com/allow-unauthenticated: "true"
-        # Scaling
+        # These annotations apply to REVISIONS
         autoscaling.knative.dev/minScale: "1"  # Prevent zero scaling
-        autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances # Ensure public access
+        autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances
     spec:
       containers:
         - image: mdirshaq/flask-web-app:v1
