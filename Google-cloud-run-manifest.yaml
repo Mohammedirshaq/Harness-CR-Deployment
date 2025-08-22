@@ -18,6 +18,6 @@ spec:
         autoscaling.knative.dev/maxScale: "5"  # Limit maximum instances
     spec:
       containers:
-        - image: mdirshaq/flask-web-app:v2
+        - image: mdirshaq/java-cal-demo:6
           ports:
             - containerPort: 5000
