@@ -20,4 +20,4 @@ spec:
       containers:
         - image: mdirshaq/java-cal-demo:6
           ports:
-            - containerPort: 5000
+            - containerPort: 8085
