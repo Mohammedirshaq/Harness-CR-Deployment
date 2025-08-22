@@ -3,7 +3,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: irshaq-Calculator-app
+  name: irshaq-calculator-app
   annotations:
     # These annotations must be at the SERVICE level (metadata.annotations)
     run.googleapis.com/ingress: "all"  # Allow public access
